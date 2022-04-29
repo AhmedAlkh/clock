@@ -3,13 +3,13 @@ var ctx = canvas.getContext('2d'); //create a 2d drawing object for canvas objec
 var radius = canvas.height / 2; //calculate clock radius using height of canvas - canvas height divided by 2
 ctx.translate(radius, radius); //remap position of x and y axis to centre of canvas (0,0)
 radius = radius * 0.90 // reduce clock radius to 90 percent so that when the clock is drawn, it's inside the canvas.
-
-drawClock(); // call function
+setInterval(drawClock, 1000); // this is the function call! set at every 1 second
 
 // function to draw clock
 function drawClock() {
     drawFace(ctx, radius);
     drawNumbers(ctx, radius);
+    drawTime(ctx, radius);
 }
 
 function drawFace(ctx, radius) {
@@ -55,4 +55,40 @@ function drawNumbers(ctx, radius) {
         ctx.translate(0, radius*0.85);
         ctx.rotate(-ang);
     }
+}
+
+function drawTime(ctx, radius) {
+    var now = new Date(); //current date
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+
+    // calculate the angle of the hour hand and draw it at 50 percent of the radius and with (0.07 of radius)
+    //hour
+    hour = hour%12;
+    hour = (hour*Math.PI/6) +
+    (minute*Math.PI/(6*60)) +
+    (second*Math.PI/(360*60));
+    drawHand(ctx, hour, radius*0.5, radius*0.07);
+
+    // calculate and draw minute hand
+    //minute
+    minute=(minute*Math.PI/30) + (second*Math.PI/(30*60));
+    drawHand(ctx, minute, radius*0.8, radius*0.07);
+
+    // calulate and draw seconds hand
+    //second
+    second=(second*Math.PI/30);
+    drawHand(ctx, second, radius*0.9, radius*0.02);
+}
+
+function drawHand(ctx, pos, length, width) {
+    ctx.beginPath();
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.moveTo(0,0);
+    ctx.rotate(pos);
+    ctx.lineTo(0, -length);
+    ctx.stroke();
+    ctx.rotate(-pos);
 }
