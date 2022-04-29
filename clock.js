@@ -9,6 +9,7 @@ drawClock(); // call function
 // function to draw clock
 function drawClock() {
     drawFace(ctx, radius);
+    drawNumbers(ctx, radius);
 }
 
 function drawFace(ctx, radius) {
@@ -34,4 +35,24 @@ function drawFace(ctx, radius) {
     ctx.arc(0, 0, radius*0.1, 0, 2*Math.PI);
     ctx.fillStyle = '#333';
     ctx.fill();
+}
+
+function drawNumbers(ctx, radius) {
+    var ang; 
+    var num;
+    ctx.font = radius*0.15 + 'px arial'; //set font size to 15 percent of radius
+    ctx.textBaseline='middle'; // set text alignment to middle of print position
+    ctx.textAlign='center'; // set text alignment to center of print position
+    // calculating print position for 12 numbers to 85 percent of the radius and have them rotate(rotate method)
+    // translate is used to remap on x and y axis of canvas
+    for(num = 1; num < 13; num++){
+        ang = num * Math.PI / 6;
+        ctx.rotate(ang);
+        ctx.translate(0, -radius*0.85);
+        ctx.rotate(-ang);
+        ctx.fillText(num.toString(), 0, 0);
+        ctx.rotate(ang);
+        ctx.translate(0, radius*0.85);
+        ctx.rotate(-ang);
+    }
 }
